@@ -1,4 +1,16 @@
 export const db = {
+  artists: [
+    {
+      id: '1ca52c3c-e18e-4135-b004-40bbb62efccb',
+      name: 'Saturnus',
+      grammy: true,
+    },
+    {
+      id: '71d24b57-a419-4007-9c44-4c2fdc7297eb',
+      name: 'Behemot',
+      grammy: false,
+    },
+  ],
   users: [
     {
       id: '1ca52c3c-e18e-4135-b004-40bbb62efccb',
