@@ -59,12 +59,15 @@ export class ArtistService {
     const artist = this.getArtist(id);
     if (!artist) throw new NotFoundException('Artist with such id not found');
 
-    db.tracks.map((track) => track.id === id ?? (track.artistId = null));
-
-    //TODO: add deleting of albumId
+    db.tracks.map((track) =>
+      track.artistId === id ? (track.artistId = null) : '',
+    );
+    db.albums.map((album) =>
+      album.artistId === id ? (album.artistId = null) : '',
+    );
 
     db.artists = db.artists.filter((artist) => artist.id !== id);
 
-    return id;
+    return artist;
   }
 }
