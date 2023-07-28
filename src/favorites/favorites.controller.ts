@@ -10,6 +10,6 @@ export class FavoritesController {
     return this.favoritesService.getFavorites();
   }
 
-  @Post()
-  createFavorites() {}
+  // @Post()
+  // createFavorites() {}
 }
