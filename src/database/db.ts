@@ -1,5 +1,22 @@
 export const db = {
-  users: [],
+  users: [
+    {
+      id: '1ca52c3c-e18e-4135-b004-40bbb62efccb',
+      login: 'Jackson',
+      password: '123456',
+      version: 1,
+      createdAt: Number(new Date()),
+      updatedAt: Number(new Date()),
+    },
+    {
+      id: '71d24b57-a419-4007-9c44-4c2fdc7297eb',
+      login: 'Foxbat',
+      password: 'qwerty',
+      version: 4,
+      createdAt: Number(new Date()),
+      updatedAt: Number(new Date()),
+    },
+  ],
   tracks: [
     {
       id: '1ca52c3c-e18e-4135-b004-40bb62efceee',
