@@ -59,4 +59,9 @@ export const db = {
       duration: 50000,
     },
   ],
+  favorites: {
+    artists: [],
+    albums: [],
+    tracks: [],
+  },
 };
