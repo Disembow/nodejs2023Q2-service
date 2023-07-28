@@ -1,7 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { db } from '../database/db';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { validateUuid } from '../utils/validateUuid';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class ArtistService {
@@ -10,18 +16,55 @@ export class ArtistService {
   }
 
   getArtist(id: string) {
-    return id;
+    if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
+
+    const artist = db.artists.find((artist) => artist.id === id);
+    if (!artist) throw new NotFoundException('Artist with such id not found');
+
+    return artist;
   }
 
   createArtist(dto: CreateArtistDto) {
-    return dto;
+    const newArtist = {
+      id: uuid(),
+      ...dto,
+    };
+
+    db.artists.push(newArtist);
+
+    return newArtist;
   }
 
   updateArtist(id: string, dto: UpdateArtistDto) {
-    return { id, dto };
+    if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
+
+    const artist = this.getArtist(id);
+    const index = db.tracks.findIndex((artist) => artist.id === id);
+
+    if (!artist) throw new NotFoundException('Artist with such id not found');
+
+    const updatedArtist = {
+      ...artist,
+      ...dto,
+    };
+
+    db.artists[index] = updatedArtist;
+
+    return updatedArtist;
   }
 
   removeArtist(id: string) {
+    if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
+
+    const artist = this.getArtist(id);
+    if (!artist) throw new NotFoundException('Artist with such id not found');
+
+    db.tracks.map((track) => track.id === id ?? (track.artistId = null));
+
+    //TODO: add deleting of albumId
+
+    db.artists = db.artists.filter((artist) => artist.id !== id);
+
     return id;
   }
 }
