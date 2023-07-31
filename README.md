@@ -8,7 +8,7 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/Disembow/nodejs2023Q2-service.git
 ```
 
 ## Installing NPM modules
@@ -17,10 +17,14 @@ git clone {repository URL}
 npm install
 ```
 
+## Env variables
+
+Rename `.env.example` file to `.env`
+
 ## Running application
 
 ```
-npm start
+npm run start
 ```
 
 After starting the app on port (4000 as default) you can open

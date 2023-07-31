@@ -1,8 +1,25 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { config } from 'dotenv';
+import { ValidationPipe } from '@nestjs/common';
+import { resolve, dirname } from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { parse } from 'yaml';
+import { SwaggerModule } from '@nestjs/swagger';
+
+config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(4000);
+
+  app.useGlobalPipes(new ValidationPipe());
+
+  const pathToDocFile = resolve(dirname(__dirname), 'doc', 'api.yaml');
+  const file = await readFile(pathToDocFile, 'utf-8');
+  const documentation = parse(file);
+  SwaggerModule.setup('doc', app, documentation);
+
+  await app.listen(process.env.PORT ?? 4000);
 }
+
 bootstrap();
