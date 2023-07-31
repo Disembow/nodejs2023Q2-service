@@ -36,33 +36,36 @@ export class UserService {
 
     db.users.push(newUser);
 
-    delete newUser.password;
-    return newUser;
+    const { password, ...rest } = newUser;
+    return rest;
   }
 
   updateUser(id: string, updateUserDto: UpdateUserDto) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const user = this.getUser(id);
+    const user = db.users.find((user) => user.id === id);
     const index = db.users.findIndex((user) => user.id === id);
 
     if (!user) throw new NotFoundException('User with such id not found');
 
-    if (updateUserDto.oldPassword !== user.password) {
+    const { newPassword, oldPassword } = updateUserDto;
+
+    if (oldPassword !== user.password) {
+      console.log(db.users);
       throw new ForbiddenException('Old password is incorrect');
     }
 
     const updatedUser = {
       ...user,
-      password: updateUserDto.newPassword,
+      password: newPassword,
       version: user.version + 1,
       updatedAt: Number(new Date()),
     };
 
     db.users[index] = updatedUser;
+    const { password, ...rest } = updatedUser;
 
-    delete updatedUser.password;
-    return updatedUser;
+    return rest;
   }
 
   removeUser(id: string) {
