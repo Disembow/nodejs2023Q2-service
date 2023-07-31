@@ -7,8 +7,6 @@ import {
   Param,
   Post,
   Put,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -30,14 +28,12 @@ export class AlbumController {
 
   @Post()
   @HttpCode(201)
-  @UsePipes(new ValidationPipe())
   createAlbum(@Body() dto: CreateAlbumDto) {
     return this.albumService.createAlbum(dto);
   }
 
   @Put(':id')
   @HttpCode(200)
-  @UsePipes(new ValidationPipe())
   updateAlbum(@Param('id') id: string, @Body() dto: UpdateAlbumDto) {
     return this.albumService.updateAlbum(id, dto);
   }
