@@ -25,6 +25,10 @@ export class TrackService {
   }
 
   createTrack(createTrackDto: CreateTrackDto) {
+    if (!createTrackDto.name || !createTrackDto.duration) {
+      throw new BadRequestException('Missing required fields in input data ');
+    }
+
     const newTrack = {
       id: uuid(),
       ...createTrackDto,
