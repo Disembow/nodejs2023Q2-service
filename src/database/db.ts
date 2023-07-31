@@ -60,8 +60,11 @@ export const db = {
     },
   ],
   favorites: {
+    albums: [
+      '1ca52c3c-e18e-4135-b004-40bbb62efccb',
+      '71d24b57-a419-4007-9c44-4c2fdc7297eb',
+    ],
     artists: [],
-    albums: [],
     tracks: [],
   },
 };
