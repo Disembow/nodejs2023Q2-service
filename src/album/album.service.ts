@@ -63,6 +63,8 @@ export class AlbumService {
 
     db.albums = db.albums.filter((a) => a.id !== id);
 
+    db.favorites.albums = db.favorites.albums.filter((a) => a.id !== id);
+
     return album;
   }
 }
