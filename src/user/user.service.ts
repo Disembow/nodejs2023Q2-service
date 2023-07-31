@@ -51,7 +51,6 @@ export class UserService {
     const { newPassword, oldPassword } = updateUserDto;
 
     if (oldPassword !== user.password) {
-      console.log(db.users);
       throw new ForbiddenException('Old password is incorrect');
     }
 
