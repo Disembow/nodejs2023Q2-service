@@ -2,7 +2,6 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTrackDto {
   @IsNotEmpty()
-  @IsOptional()
   @IsString()
   name: string;
 
@@ -17,7 +16,6 @@ export class CreateTrackDto {
   albumId: string | null;
 
   @IsNotEmpty()
-  @IsOptional()
   @IsNumber()
   duration: number;
 }
