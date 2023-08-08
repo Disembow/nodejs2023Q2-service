@@ -8,43 +8,43 @@ import { v4 as uuid } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { validateUuid } from '../utils/validateUuid';
-import { db } from '../database/db';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
-  getUsers() {
-    return db.users;
+  constructor(private prisma: PrismaService) {}
+
+  async getUsers() {
+    return await this.prisma.user.findMany();
   }
 
-  getUser(id: string) {
+  async getUser(id: string) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const user = db.users.find((user) => user.id === id);
+    const user = this.prisma.user.findUnique({ where: { id } });
+
     if (!user) throw new NotFoundException('User with such id not found');
 
     return user;
   }
 
-  createUser(createUserDto: CreateUserDto) {
+  async createUser(createUserDto: CreateUserDto) {
     const newUser = {
       id: uuid(),
       ...createUserDto,
-      version: 1,
-      createdAt: Number(new Date()),
-      updatedAt: Number(new Date()),
     };
 
-    db.users.push(newUser);
+    await this.prisma.user.create({ data: newUser });
 
     const { password, ...rest } = newUser;
+
     return rest;
   }
 
-  updateUser(id: string, updateUserDto: UpdateUserDto) {
+  async updateUser(id: string, updateUserDto: UpdateUserDto) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const user = db.users.find((user) => user.id === id);
-    const index = db.users.findIndex((user) => user.id === id);
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) throw new NotFoundException('User with such id not found');
 
@@ -58,22 +58,23 @@ export class UserService {
       ...user,
       password: newPassword,
       version: user.version + 1,
-      updatedAt: Number(new Date()),
     };
 
-    db.users[index] = updatedUser;
+    await this.prisma.user.update({ where: { id }, data: updatedUser });
+
     const { password, ...rest } = updatedUser;
 
     return rest;
   }
 
-  removeUser(id: string) {
+  async removeUser(id: string) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const user = this.getUser(id);
+    const user = this.prisma.user.findUnique({ where: { id } });
+
     if (!user) throw new NotFoundException('User with such id not found');
 
-    db.users = db.users.filter((user) => user.id !== id);
+    await this.prisma.user.delete({ where: { id } });
 
     return user;
   }
