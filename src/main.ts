@@ -15,8 +15,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const pathToDocFile = resolve(dirname(__dirname), 'doc', 'api.yaml');
-  const file = await readFile(pathToDocFile, 'utf-8');
-  const documentation = parse(file);
+  const docFile = await readFile(pathToDocFile, 'utf-8');
+  const documentation = parse(docFile);
   SwaggerModule.setup('doc', app, documentation);
 
   await app.listen(process.env.PORT ?? 4000);
