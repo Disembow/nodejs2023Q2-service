@@ -13,10 +13,12 @@ services:
     depends_on:
       - postgres
     environment:
-      - DATABASE_URL: ${DATABASE_URL}
-      - POSTGRES_USER: ${POSTGRES_USER}
-      - POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      - POSTGRES_DB: ${POSTGRES_DB}
+      DATABASE_URL: ${DATABASE_URL}
+      POSTGRES_PORT: ${POSTGRES_ALT_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: localhost
     networks:
       - postgres
   postgres:
@@ -26,7 +28,7 @@ services:
     build: ./src/database/
     restart: always
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - ${POSTGRES_ALT_PORT}:${POSTGRES_PORT}
     volumes:
       - /var/lib/postgresql/data
     environment:
@@ -42,5 +44,5 @@ networks:
     driver: bridge
 
 volumes:
-  app:
+  node:
   postgres:
