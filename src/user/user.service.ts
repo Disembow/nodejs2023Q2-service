@@ -23,7 +23,8 @@ export class UserService {
 
     const user = this.prisma.user.findUnique({ where: { id } });
 
-    if (!user) throw new NotFoundException('User with such id not found');
+    if (!this.prisma.user.findUnique({ where: { id } }))
+      throw new NotFoundException('User with such id does not found');
 
     return user;
   }
@@ -31,6 +32,7 @@ export class UserService {
   async createUser(createUserDto: CreateUserDto) {
     const newUser = {
       id: uuid(),
+      version: 1,
       ...createUserDto,
     };
 

@@ -14,7 +14,7 @@ export class ArtistService {
   constructor(private prisma: PrismaService) {}
 
   async getAllArtists() {
-    await this.prisma.artist.findMany();
+    return await this.prisma.artist.findMany();
   }
 
   async getArtist(id: string) {
@@ -62,15 +62,12 @@ export class ArtistService {
 
     if (!artist) throw new NotFoundException('Artist with such id not found');
 
-    // TODO: check if null check is necessary
-    // db.tracks.map((track) =>
-    //   track.artistId === id ? (track.artistId = null) : '',
-    // );
-    // db.albums.map((album) =>
-    //   album.artistId === id ? (album.artistId = null) : '',
-    // );
-
     await this.prisma.artist.delete({ where: { id } });
+
+    await this.prisma.track.updateMany({
+      where: { artistId: { equals: id } },
+      data: { artistId: null },
+    });
 
     // TODO: add logic of deleting from favorites after deleting
     // db.favorites.artists = db.favorites.artists.filter(
