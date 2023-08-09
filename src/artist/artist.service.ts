@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { db } from '../database/db';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { validateUuid } from '../utils/validateUuid';
@@ -74,9 +73,9 @@ export class ArtistService {
     await this.prisma.artist.delete({ where: { id } });
 
     // TODO: add logic of deleting from favorites after deleting
-    db.favorites.artists = db.favorites.artists.filter(
-      (artist) => artist.id !== id,
-    );
+    // db.favorites.artists = db.favorites.artists.filter(
+    //   (artist) => artist.id !== id,
+    // );
 
     return artist;
   }
