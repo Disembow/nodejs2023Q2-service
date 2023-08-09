@@ -20,11 +20,13 @@ export class TrackService {
   async getTrack(id: string) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const track = this.prisma.track.findUnique({ where: { id } });
+    const track = await this.prisma.track.findUnique({ where: { id } });
 
-    if (!track) throw new NotFoundException('Track with such id not found');
-
-    return track;
+    if (!track) {
+      throw new NotFoundException('Track with such id not found');
+    } else {
+      return track;
+    }
   }
 
   async createTrack(createTrackDto: CreateTrackDto) {

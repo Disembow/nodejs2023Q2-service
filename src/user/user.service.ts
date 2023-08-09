@@ -21,12 +21,13 @@ export class UserService {
   async getUser(id: string) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const user = this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
-    if (!this.prisma.user.findUnique({ where: { id } }))
+    if (!user) {
       throw new NotFoundException('User with such id does not found');
-
-    return user;
+    } else {
+      return user;
+    }
   }
 
   async createUser(createUserDto: CreateUserDto) {
