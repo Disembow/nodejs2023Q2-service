@@ -44,7 +44,7 @@ export class UserService {
   async updateUser(id: string, updateUserDto: UpdateUserDto) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.getUser(id);
 
     if (!user) throw new NotFoundException('User with such id not found');
 
@@ -73,7 +73,7 @@ export class UserService {
   async removeUser(id: string) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const user = this.prisma.user.findUnique({ where: { id } });
+    const user = await this.getUser(id);
 
     if (!user) throw new NotFoundException('User with such id not found');
 
