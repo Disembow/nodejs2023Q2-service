@@ -68,8 +68,10 @@ export class AlbumService {
     // db.albums = db.albums.filter((a) => a.id !== id);
     await this.prisma.album.delete({ where: { id } });
 
-    // TODO: add logic of deleting from favorites after deleting
-    // db.favorites.albums = db.favorites.albums.filter((a) => a.id !== id);
+    await this.prisma.track.updateMany({
+      where: { albumId: { equals: id } },
+      data: { albumId: null },
+    });
 
     return album;
   }
