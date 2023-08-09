@@ -6,8 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "docker:restart": "npm run docker:down && npm run docker:up && npx prisma migrate deploy",
-    "docker:up": "docker compose up -d",
+    "docker:restart": "npm run docker:down && npm run docker:up",
+    "docker:up": "docker compose up --build",
     "docker:down": "docker compose down",
     "docker:scan": "docker scout recommendations nodejs2023q2-service-node && docker scout recommendations nodejs2023q2-service-postgres",
     "prebuild": "rimraf dist",
