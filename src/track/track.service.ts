@@ -69,6 +69,7 @@ export class TrackService {
 
     if (!track) throw new NotFoundException('Track with such id not found');
 
+    // TODO: add logic of deleting from favorites after deleting
     await this.prisma.track.delete({ where: { id } });
 
     return track;
