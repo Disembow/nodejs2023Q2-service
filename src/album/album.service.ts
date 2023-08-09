@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { db } from '../database/db';
 import { v4 as uuid } from 'uuid';
 import { validateUuid } from '../utils/validateUuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -43,7 +42,6 @@ export class AlbumService {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
     const album = await this.getAlbum(id);
-    // const index = db.albums.findIndex((a) => a.id === id);
 
     if (!album) throw new NotFoundException('Album with such id not found');
 
