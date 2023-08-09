@@ -60,7 +60,10 @@ export class UserService {
       version: user.version + 1,
     };
 
-    await this.prisma.user.update({ where: { id }, data: updatedUser });
+    await this.prisma.user.update({
+      where: { id },
+      data: updatedUser,
+    });
 
     const { password, ...rest } = updatedUser;
 
