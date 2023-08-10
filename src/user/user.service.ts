@@ -37,40 +37,52 @@ export class UserService {
       ...createUserDto,
     };
 
-    await this.prisma.user.create({ data: newUser });
+    const user = await this.prisma.user.create({ data: newUser });
 
-    const { password, ...rest } = newUser;
+    const { id, login, version, createdAt, updatedAt } = user;
 
-    return rest;
+    const userToReturn = {
+      id,
+      login,
+      version,
+      createdAt: createdAt.getTime(),
+      updatedAt: updatedAt.getTime(),
+    };
+
+    return userToReturn;
   }
 
   async updateUser(id: string, updateUserDto: UpdateUserDto) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const user = await this.getUser(id);
+    const { login, createdAt, version, password } = await this.getUser(id);
 
-    if (!user) throw new NotFoundException('User with such id not found');
+    if (!login) throw new NotFoundException('User with such id not found');
 
     const { newPassword, oldPassword } = updateUserDto;
 
-    if (oldPassword !== user.password) {
+    if (oldPassword !== password) {
       throw new ForbiddenException('Old password is incorrect');
     }
 
     const updatedUser = {
-      ...user,
+      id,
+      login,
+      createdAt,
       password: newPassword,
-      version: user.version + 1,
+      version: version + 1,
     };
 
-    await this.prisma.user.update({
+    const { password: pass, ...rest } = await this.prisma.user.update({
       where: { id },
       data: updatedUser,
     });
 
-    const { password, ...rest } = updatedUser;
-
-    return rest;
+    return {
+      ...rest,
+      createdAt: Number(rest.createdAt),
+      updatedAt: Number(rest.updatedAt),
+    };
   }
 
   async removeUser(id: string) {
