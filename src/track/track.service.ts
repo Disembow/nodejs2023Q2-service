@@ -67,7 +67,7 @@ export class TrackService {
   async removeTrack(id: string) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const track = this.getTrack(id);
+    const track = await this.getTrack(id);
 
     if (!track) throw new NotFoundException('Track with such id not found');
 
