@@ -43,6 +43,12 @@ To reload container use:
   npm run docker:reload
 ```
 
+Then
+
+```javascript
+  npm run test
+```
+
 ## Docker vulnerabilities scan
 
 ```javascript
