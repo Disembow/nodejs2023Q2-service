@@ -8,23 +8,51 @@
 ## Downloading
 
 ```javascript
-git clone https://github.com/Disembow/nodejs2023Q2-service.git
+  git clone https://github.com/Disembow/nodejs2023Q2-service.git
 ```
 
 ## Installing NPM modules
 
 ```javascript
-npm install
+  npm install
 ```
 
 ## Env variables
 
 Rename `.env.example` file to `.env`
 
+## Running application via Docker
+
+Launch Docker desktop app
+
+To run app:
+
+```javascript
+  npm run docker:up
+```
+
+To stop running app:
+
+```javascript
+  npm run docker:down
+```
+
+To reload container use:
+
+```javascript
+  npm run docker:reload
+```
+
+## Docker vulnerabilities scan
+
+```javascript
+  npm run docker:scan
+```
+
 ## Running application
 
 ```javascript
-npm run start
+  npm run start
 ```
 
 After starting the app on port (4000 as default) you can open
@@ -38,35 +66,35 @@ After application running open new terminal and enter:
 To run all tests without authorization
 
 ```javascript
-npm run test
+  npm run test
 ```
 
 To run only one of all test suites
 
 ```javascript
-npm run test -- <path to suite>
+  npm run test -- <path to suite>
 ```
 
 To run all test with authorization
 
 ```javascript
-npm run test:auth
+  npm run test:auth
 ```
 
 To run only specific test suite with authorization
 
 ```javascript
-npm run test:auth -- <path to suite>
+  npm run test:auth -- <path to suite>
 ```
 
 ### Auto-fix and format
 
 ```javascript
-npm run lint
+  npm run lint
 ```
 
 ```javascript
-npm run format
+  npm run format
 ```
 
 ### Debugging in VSCode
