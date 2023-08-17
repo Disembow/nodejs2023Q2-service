@@ -1,10 +1,15 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from '../user/user.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { compare } from 'bcrypt';
-import { IUser, SafetyUser } from './types/user.interface';
+import { AuthTokens, IUser, SafetyUser } from './types/auth.types';
 import { JwtService } from '@nestjs/jwt';
+import { RefreshTokenAuthDto } from './dto/refresh-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -18,9 +23,7 @@ export class AuthService {
     return await this.userService.createUser(authDto);
   }
 
-  async login(
-    authDto: CreateUserDto,
-  ): Promise<SafetyUser & { accessToken: string }> {
+  async login(authDto: CreateUserDto): Promise<AuthTokens> {
     const { login, password } = authDto;
 
     const user = await this.prisma.user.findFirst({ where: { login } });
@@ -33,21 +36,45 @@ export class AuthService {
     if (!isCorrectPassword)
       throw new ForbiddenException('Password is incorrect');
 
-    return {
-      ...this.buildUserResponse(user),
-      ...(await this.getJwt(user)),
-    };
+    return await this.getJwt(user);
   }
 
-  async refresh() {
-    return;
+  async refresh(refreshDto: RefreshTokenAuthDto) {
+    const { refreshToken } = refreshDto;
+    if (!refreshToken)
+      throw new UnauthorizedException('Credentials are not valid');
+
+    let payload: Pick<IUser, 'id' | 'login'>;
+
+    try {
+      payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: process.env.JWT_SECRET_REFRESH_KEY,
+      });
+    } catch (error) {
+      throw new ForbiddenException('Credentials are not valid');
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: payload.id },
+    });
+
+    if (!user) throw new ForbiddenException('Credentials are not valid');
+
+    return await this.getJwt(user);
   }
 
-  async getJwt(user: IUser): Promise<{ accessToken: string }> {
+  async getJwt(user: IUser): Promise<AuthTokens> {
     const { id, login } = user;
 
     return {
       accessToken: await this.jwtService.signAsync({ userId: id, login }),
+      refreshToken: await this.jwtService.signAsync(
+        { userId: id, login },
+        {
+          secret: process.env.JWT_SECRET_REFRESH_KEY,
+          expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+        },
+      ),
     };
   }
 

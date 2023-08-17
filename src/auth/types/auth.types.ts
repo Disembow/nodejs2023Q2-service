@@ -11,3 +11,8 @@ export type SafetyUser = Omit<IUser, 'password' | 'createdAt' | 'updatedAt'> & {
   createdAt: number;
   updatedAt: number;
 };
+
+export type AuthTokens = {
+  accessToken: string;
+  refreshToken: string;
+};

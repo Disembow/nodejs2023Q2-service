@@ -42,12 +42,6 @@ export class FavoritesService {
       }),
     );
 
-    console.log({
-      albums: [...albums],
-      artists: [...artists],
-      tracks: [...tracks],
-    });
-
     return {
       albums: [...albums],
       artists: [...artists],
