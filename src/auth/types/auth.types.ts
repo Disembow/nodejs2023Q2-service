@@ -16,3 +16,8 @@ export type AuthTokens = {
   accessToken: string;
   refreshToken: string;
 };
+
+export type PayloadType = {
+  userId: string;
+  login: string;
+};

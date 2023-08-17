@@ -7,7 +7,7 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from '../user/user.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { compare } from 'bcrypt';
-import { AuthTokens, IUser, SafetyUser } from './types/auth.types';
+import { AuthTokens, IUser, PayloadType, SafetyUser } from './types/auth.types';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenAuthDto } from './dto/refresh-token.dto';
 
@@ -44,7 +44,7 @@ export class AuthService {
     if (!refreshToken)
       throw new UnauthorizedException('Credentials are not valid');
 
-    let payload: Pick<IUser, 'id' | 'login'>;
+    let payload: PayloadType;
 
     try {
       payload = await this.jwtService.verifyAsync(refreshToken, {
@@ -55,7 +55,7 @@ export class AuthService {
     }
 
     const user = await this.prisma.user.findUnique({
-      where: { id: payload.id },
+      where: { id: payload.userId },
     });
 
     if (!user) throw new ForbiddenException('Credentials are not valid');
