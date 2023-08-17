@@ -9,6 +9,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { validateUuid } from '../utils/validateUuid';
 import { PrismaService } from '../prisma/prisma.service';
+import { generateHashFromPassword } from '../utils/generateHashFromPassword';
 
 @Injectable()
 export class UserService {
@@ -31,10 +32,13 @@ export class UserService {
   }
 
   async createUser(createUserDto: CreateUserDto) {
+    const { login: userLogin, password } = createUserDto;
+
     const newUser = {
       id: uuid(),
       version: 1,
-      ...createUserDto,
+      login: userLogin,
+      password: await generateHashFromPassword(password),
     };
 
     const user = await this.prisma.user.create({ data: newUser });
