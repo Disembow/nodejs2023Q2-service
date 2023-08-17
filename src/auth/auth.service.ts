@@ -52,6 +52,7 @@ export class AuthService {
   }
 
   buildUserResponse(user: IUser): SafetyUser {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, createdAt, updatedAt, ...rest } = user;
 
     return {

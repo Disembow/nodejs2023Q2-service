@@ -77,6 +77,7 @@ export class UserService {
       version: version + 1,
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: pass, ...rest } = await this.prisma.user.update({
       where: { id },
       data: updatedUser,
