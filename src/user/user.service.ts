@@ -10,6 +10,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { validateUuid } from '../utils/validateUuid';
 import { PrismaService } from '../prisma/prisma.service';
 import { generateHashFromPassword } from '../utils/generateHashFromPassword';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -65,7 +66,9 @@ export class UserService {
 
     const { newPassword, oldPassword } = updateUserDto;
 
-    if (oldPassword !== password) {
+    const isOldPasswordCorrect = await compare(oldPassword, password);
+
+    if (!isOldPasswordCorrect) {
       throw new ForbiddenException('Old password is incorrect');
     }
 
