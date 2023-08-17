@@ -113,59 +113,38 @@ export class FavoritesService {
     if (!validateUuid(id)) throw new BadRequestException();
 
     const favorites = await this.prisma.favorites.findFirst();
-    // const albumId = favorites.albums.find((a) => a === id);
 
-    // if (!albumId) {
-    //   throw new NotFoundException(
-    //     'Album with such id was not added to favorites',
-    //   );
-    // } else {
     const remainingAlbums = favorites.albums.filter((a) => a !== id);
 
     return await this.prisma.favorites.update({
       where: { favId: favorites.favId },
       data: { ...favorites, albums: remainingAlbums },
     });
-    // }
   }
 
   async removeArtistFromFavorites(id: string) {
     if (!validateUuid(id)) throw new BadRequestException();
 
     const favorites = await this.prisma.favorites.findFirst();
-    // const artistId = favorites.artists.find((a) => a === id);
 
-    // if (!artistId) {
-    //   throw new NotFoundException(
-    //     'Artist with such id was not added to favorites',
-    //   );
-    // } else {
     const remainingArtists = favorites.artists.filter((a) => a !== id);
 
     return await this.prisma.favorites.update({
       where: { favId: favorites.favId },
       data: { ...favorites, artists: remainingArtists },
     });
-    // }
   }
 
   async removeTrackFromFavorites(id: string) {
     if (!validateUuid(id)) throw new BadRequestException();
 
     const favorites = await this.prisma.favorites.findFirst();
-    // const trackId = favorites.tracks.find((t) => t === id);
 
-    // if (!trackId) {
-    //   throw new NotFoundException(
-    //     'Track with such id was not added to favorites',
-    //   );
-    // } else {
     const remainingTracks = favorites.tracks.filter((t) => t !== id);
 
     return await this.prisma.favorites.update({
       where: { favId: favorites.favId },
       data: { ...favorites, tracks: remainingTracks },
     });
-    // }
   }
 }
