@@ -35,9 +35,13 @@ export class FavoritesService {
       }),
     );
 
-    // console.log({ albums, artists, tracks });
+    const response = {
+      albums: albums.filter((e) => e !== null),
+      artists: artists.filter((e) => e !== null),
+      tracks: tracks.filter((e) => e !== null),
+    };
 
-    return { albums, artists, tracks };
+    return response;
   }
 
   async setAlbumToFavorites(id: string) {
@@ -132,7 +136,6 @@ export class FavoritesService {
     if (!validateUuid(id)) throw new BadRequestException('Invalid album Id');
 
     const favorites = await this.prisma.favorites.findFirst();
-    console.log('>>>> favorites', favorites);
 
     const isAlbumInFavorites = favorites?.albums.find((t) => t === id);
     if (!isAlbumInFavorites)
@@ -144,7 +147,6 @@ export class FavoritesService {
       where: { favId: favorites.favId },
       data: { ...favorites, albums: remainingAlbums },
     });
-    console.log('>>>> responce', responce);
 
     return responce;
   }

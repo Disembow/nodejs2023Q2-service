@@ -62,17 +62,11 @@ export class AlbumService {
 
     if (!album) throw new NotFoundException('Album with such id not found');
 
-    // TODO: add logic of deleting from favorites after deleting
-    // db.tracks.map((t) => (t.albumId === id ? (t.albumId = null) : ''));
-
-    // db.albums = db.albums.filter((a) => a.id !== id);
-    await this.prisma.album.delete({ where: { id } });
-
     await this.prisma.track.updateMany({
       where: { albumId: { equals: id } },
       data: { albumId: null },
     });
 
-    return album;
+    return await this.prisma.album.delete({ where: { id } });
   }
 }

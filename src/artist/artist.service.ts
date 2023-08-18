@@ -59,21 +59,18 @@ export class ArtistService {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
     const artist = await this.getArtist(id);
-
     if (!artist) throw new NotFoundException('Artist with such id not found');
 
-    await this.prisma.artist.delete({ where: { id } });
+    await this.prisma.album.updateMany({
+      where: { artistId: { equals: id } },
+      data: { artistId: null },
+    });
 
     await this.prisma.track.updateMany({
       where: { artistId: { equals: id } },
       data: { artistId: null },
     });
 
-    // TODO: add logic of deleting from favorites after deleting
-    // db.favorites.artists = db.favorites.artists.filter(
-    //   (artist) => artist.id !== id,
-    // );
-
-    return artist;
+    return await this.prisma.artist.delete({ where: { id } });
   }
 }
