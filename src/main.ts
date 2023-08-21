@@ -6,12 +6,16 @@ import { resolve, dirname } from 'node:path';
 import { readFile } from 'node:fs/promises';
 import { parse } from 'yaml';
 import { SwaggerModule } from '@nestjs/swagger';
+import { LoggerService } from './logger/logger.service';
 
 config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
 
+  app.useLogger(app.get(LoggerService));
   app.useGlobalPipes(new ValidationPipe());
 
   const pathToDocFile = resolve(dirname(__dirname), 'doc', 'api.yaml');
