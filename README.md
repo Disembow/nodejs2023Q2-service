@@ -7,29 +7,63 @@
 
 ## Downloading
 
-```
-git clone https://github.com/Disembow/nodejs2023Q2-service.git
+```javascript
+  git clone https://github.com/Disembow/nodejs2023Q2-service.git
 ```
 
 ## Installing NPM modules
 
-```
-npm install
+```javascript
+  npm install
 ```
 
 ## Env variables
 
 Rename `.env.example` file to `.env`
 
+## Running application via Docker
+
+Launch Docker desktop app
+
+To run app:
+
+```javascript
+  npm run docker:up
+```
+
+To stop running app:
+
+```javascript
+  npm run docker:down
+```
+
+To reload container use:
+
+```javascript
+  npm run docker:reload
+```
+
+Then
+
+```javascript
+  npm run test
+```
+
+## Docker vulnerabilities scan
+
+```javascript
+  npm run docker:scan
+```
+
 ## Running application
 
-```
-npm run start
+```javascript
+  npm run start
 ```
 
 After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+in your browser OpenAPI documentation by typing <http://localhost:4000/doc/>.
+For more information about OpenAPI/Swagger please visit <https://swagger.io/>.
 
 ## Testing
 
@@ -37,40 +71,40 @@ After application running open new terminal and enter:
 
 To run all tests without authorization
 
-```
-npm run test
+```javascript
+  npm run test
 ```
 
 To run only one of all test suites
 
-```
-npm run test -- <path to suite>
+```javascript
+  npm run test -- <path to suite>
 ```
 
 To run all test with authorization
 
-```
-npm run test:auth
+```javascript
+  npm run test:auth
 ```
 
 To run only specific test suite with authorization
 
-```
-npm run test:auth -- <path to suite>
+```javascript
+  npm run test:auth -- <path to suite>
 ```
 
 ### Auto-fix and format
 
-```
-npm run lint
+```javascript
+  npm run lint
 ```
 
-```
-npm run format
+```javascript
+  npm run format
 ```
 
 ### Debugging in VSCode
 
-Press <kbd>F5</kbd> to debug.
+Press `F5` to debug.
 
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+For more information, visit: <https://code.visualstudio.com/docs/editor/debugging>

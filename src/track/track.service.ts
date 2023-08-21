@@ -5,26 +5,31 @@ import {
 } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { db } from '../database/db';
 import { validateUuid } from '../utils/validateUuid';
 import { v4 as uuid } from 'uuid';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class TrackService {
-  getAllTracks() {
-    return db.tracks;
+  constructor(private prisma: PrismaService) {}
+
+  async getAllTracks() {
+    return await this.prisma.track.findMany();
   }
 
-  getTrack(id: string) {
+  async getTrack(id: string) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const track = db.tracks.find((track) => track.id === id);
-    if (!track) throw new NotFoundException('Track with such id not found');
+    const track = await this.prisma.track.findUnique({ where: { id } });
 
-    return track;
+    if (!track) {
+      throw new NotFoundException('Track with such id not found');
+    } else {
+      return track;
+    }
   }
 
-  createTrack(createTrackDto: CreateTrackDto) {
+  async createTrack(createTrackDto: CreateTrackDto) {
     if (!createTrackDto.name || !createTrackDto.duration) {
       throw new BadRequestException('Missing required fields in input data ');
     }
@@ -34,16 +39,15 @@ export class TrackService {
       ...createTrackDto,
     };
 
-    db.tracks.push(newTrack);
+    await this.prisma.track.create({ data: newTrack });
 
     return newTrack;
   }
 
-  updateTrack(id: string, updateTrackDto: UpdateTrackDto) {
+  async updateTrack(id: string, updateTrackDto: UpdateTrackDto) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const track = this.getTrack(id);
-    const index = db.tracks.findIndex((track) => track.id === id);
+    const track = await this.getTrack(id);
 
     if (!track) throw new NotFoundException('Track with such id not found');
 
@@ -52,22 +56,23 @@ export class TrackService {
       ...updateTrackDto,
     };
 
-    db.tracks[index] = updatedTrack;
+    await this.prisma.track.update({
+      where: { id },
+      data: updatedTrack,
+    });
 
     return updatedTrack;
   }
 
-  removeTrack(id: string) {
+  async removeTrack(id: string) {
     if (!validateUuid(id)) throw new BadRequestException('Entered invalid id');
 
-    const track = this.getTrack(id);
+    const track = await this.getTrack(id);
+
     if (!track) throw new NotFoundException('Track with such id not found');
 
-    db.tracks = db.tracks.filter((track) => track.id !== id);
-
-    db.favorites.tracks = db.favorites.tracks.filter(
-      (track) => track.id !== id,
-    );
+    // TODO: add logic of deleting from favorites after deleting
+    await this.prisma.track.delete({ where: { id } });
 
     return track;
   }
