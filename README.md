@@ -37,17 +37,22 @@ To stop running app:
   npm run docker:down
 ```
 
-To reload container use:
+To restart container use:
 
 ```javascript
-  npm run docker:reload
+  npm run docker:restart
 ```
 
-Then
+Then for running test for authentification task part
 
 ```javascript
-  npm run test
+  npm run test:auth
 ```
+
+## Logs
+
+All http logs are located in docker container at app/logs/http.
+Max size of log files were made 1Kb only for cross-check needs.
 
 ## Docker vulnerabilities scan
 
